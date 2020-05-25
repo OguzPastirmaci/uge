@@ -2,7 +2,7 @@
 
 set -x
 
-export SGE_ADMIN=opc
+export SGE_ADMIN=${sge_admin}
 
 mkdir -p /home/$SGE_ADMIN/ocisge/{scripts,logs}
 
@@ -26,13 +26,11 @@ export SGE_ROOT=${sge_root}
 export CONFIG_FILE=/home/$SGE_ADMIN/uge_configuration.conf
 export SCALING_COOLDOWN_IN_SECONDS=300
 export SCALING_LOG=/home/$SGE_ADMIN/ocisge/logs/scaling_history.log
-export COMPUTE_SHAPE=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[0].shape')
+export COMPUTE_SHAPE=${sge_compute_instance_shape}
 EOF
 
 cat << 'EOF' > /home/$SGE_ADMIN/ocisge/scripts/cluster_init.sh
 #!/bin/bash
-
-set -x
 
 . /home/$SGE_ADMIN/ocisge/scripts/cluster-info
 
@@ -50,7 +48,7 @@ sed -i 's/^SGE_ROOT=.*/SGE_ROOT="'"$SGE_ROOT"'"/' $CONFIG_FILE
 sed -i 's/^ADMIN_USER=.*/ADMIN_USER="'"$SGE_ADMIN"'"/' $CONFIG_FILE
 
 cd $SGE_ROOT
-echo "Adding $MASTER_HOSTNAME as admin and submit host"
+echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 ./inst_sge -m -s -auto $CONFIG_FILE
 cp $SGE_ROOT/$CELL_NAME/common/settings.sh /etc/profile.d/SGE.sh
 chmod +x /etc/profile.d/SGE.sh
@@ -58,7 +56,7 @@ chmod +x /etc/profile.d/SGE.sh
 
 # Add EXEC hosts
 until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
-    echo "Waiting for Instance Pool state to be RUNNING"
+    echo "$(date) Waiting for Instance Pool state to be RUNNING"
     sleep 5
     done
 
@@ -66,18 +64,25 @@ INSTANCE_IDS=$($OCI_CLI_LOCATION compute-management instance-pool list-instances
 
     for INSTANCE in $INSTANCE_IDS; do
         PRIVATE_IP=$($OCI_CLI_LOCATION compute instance list-vnics --instance-id $INSTANCE --compartment-id $COMPARTMENT_ID | jq -r '.data[]."private-ip"')
+        echo "$(date) Private IP of the exec host to be added: $PRIVATE_IP"
         NEW_COMPUTE_DISPLAY_NAME=$(host $PRIVATE_IP | awk '{ sub(/\.$/, ""); print $NF }' | cut -d. -f1)
         $OCI_CLI_LOCATION compute instance update --instance-id $INSTANCE --display-name $NEW_COMPUTE_DISPLAY_NAME
+        echo "$(date) Changing display name of the exec host to be added to $NEW_COMPUTE_DISPLAY_NAME"
         COMPUTE_HOSTNAME_TO_ADD=$(host $PRIVATE_IP | awk '{ sub(/\.$/, ""); print $NF }')
         sed -i 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST="'"$COMPUTE_HOSTNAME_TO_ADD"'"/' $CONFIG_FILE
         until su - $SGE_ADMIN -c "ssh -q -oStrictHostKeyChecking=no $SGE_ADMIN@$COMPUTE_HOSTNAME_TO_ADD exit"; do
-            sleep 5
+            echo "$(date) Waiting for remote exec host to respond"
+            sleep 1
         done
+    echo "$(date) Adding $COMPUTE_HOSTNAME_TO_ADD as an exec host to cluster"
     su - $SGE_ADMIN -c "scp $CONFIG_FILE $COMPUTE_HOSTNAME_TO_ADD:$CONFIG_FILE"
     su - $SGE_ADMIN -c "cd $SGE_ROOT && ./inst_sge -x -auto $CONFIG_FILE"
+    echo "$(date) Added $COMPUTE_HOSTNAME_TO_ADD to cluster"
     done
-    echo "$(date) Cluster initialization completed"
-fi
+    
+echo "$(date) Changing all.q's tmpdir to /nvme/tmp"
+qconf -rattr queue tmpdir /nvme/tmp all.q
+echo "$(date) Cluster initialization completed"
 EOF
 
 cat << 'EOF' > /home/$SGE_ADMIN/ocisge/scripts/add-exec-host.sh
@@ -180,13 +185,16 @@ then
 fi
 EOF
 
+# Setup permissions of scripts
 chown -R $SGE_ADMIN /home/$SGE_ADMIN/ocisge
 chmod +x /home/$SGE_ADMIN/ocisge/scripts/cluster_init.sh
 chmod +x /home/$SGE_ADMIN/ocisge/scripts/add-exec-host.sh
 chmod +x /home/$SGE_ADMIN/ocisge/scripts/remove-exec-host.sh
 chmod +x /home/$SGE_ADMIN/ocisge/scripts/autoscaling.sh
 
+# Run cluster initialization
 . /home/$SGE_ADMIN/ocisge/scripts/cluster-info
 /home/$SGE_ADMIN/ocisge/scripts/cluster_init.sh >> /home/$SGE_ADMIN/ocisge/logs/cluster_init.log
 
+# Add autoscaling script as a cron job that runs every minute
 (crontab -u 2>/dev/null; echo "* * * * * /home/$SGE_ADMIN/ocisge/scripts/autoscaling.sh >> /home/$SGE_ADMIN/ocisge/logs/autoscaling.log") | crontab -

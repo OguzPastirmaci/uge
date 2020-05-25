@@ -37,3 +37,8 @@ data "oci_core_instance_pool_instances" "sge_instance_pool_instances_datasource"
   display_name     = "sge-compute-pool-${random_pet.server.id}"
 }
 
+data "oci_core_instance" "sge_instance_pool_instance_singular_datasource" {
+  count       = var.cluster_initial_size
+  instance_id = "${lookup(data.oci_core_instance_pool_instances.sge_instance_pool_instances_datasource.instances[count.index], "id")}"
+}
+

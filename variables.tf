@@ -49,3 +49,7 @@ variable "cluster_max_size" {
 variable "execd_spool_dir_local" {
   default = "/nvme/sge/spool"
 }
+
+variable "sge_admin" {
+  default = "opc"
+}

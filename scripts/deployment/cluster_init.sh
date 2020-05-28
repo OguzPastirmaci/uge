@@ -7,7 +7,7 @@ echo "$(date) Starting cluster initialization"
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
 echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME sge-master | tee -a /etc/hosts
-CELL_NAME=$MASTER_HOSTNAME-default
+CELL_NAME=$MASTER_HOSTNAME
 
 wget https://raw.githubusercontent.com/OguzPastirmaci/misc/master/uge.conf
 cp ./uge.conf $CONFIG_FILE

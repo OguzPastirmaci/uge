@@ -6,7 +6,7 @@ echo "$(date) Starting cluster initialization"
 # Add ADMIN and SUBMIT host
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
-echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME sge-master | tee -a /etc/hosts
+echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME | tee -a /etc/hosts
 CELL_NAME=$MASTER_HOSTNAME
 
 wget https://raw.githubusercontent.com/OguzPastirmaci/misc/master/uge.conf

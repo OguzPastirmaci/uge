@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /home/sgeadmin/ocisge/scripts/cluster-info
+. /home/sgeadmin/ocisge/scripts/info.sh
 
 echo "$(date) Starting cluster initialization"
 # Add ADMIN and SUBMIT host

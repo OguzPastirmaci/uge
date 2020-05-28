@@ -25,13 +25,6 @@ echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 #. /etc/profile.d/SGE.csh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 
-# Add EXEC hosts
-#until [ $INSTANCE_POOL_STATE == "RUNNING" ]; do
-#    echo "$(date) Waiting for Instance Pool state to be RUNNING"
-#    sleep 10
-#    INSTANCE_POOL_STATE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"')
-#done
-
 #echo "$(date) Changing all.q's tmpdir to /nvme/tmp"
 #qconf -rattr queue tmpdir /nvme/tmp all.q
 qconf -Ap $SGE_ROOT/simcores_pe

@@ -2,8 +2,8 @@
 
 set -x
 
-. /etc/profile.d/SGE.sh
 . /home/sgeadmin/ocisge/scripts/info.sh
+. $SGE_ROOT/$CELL_NAME/common/settings.sh
 
 export CLUSTER_SCALING_FREQUENCY=300
 export CURRENT_INSTANCE_POOL_SIZE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID --region $REGION --query 'data.size' --raw-output)

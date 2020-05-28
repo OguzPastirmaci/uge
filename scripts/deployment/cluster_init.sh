@@ -41,20 +41,15 @@ INSTANCE_IDS=$($OCI_CLI_LOCATION compute-management instance-pool list-instances
                 echo "$(date) Waiting for remote exec host to respond"
                 sleep 10
             done
-        sudo -i -u sgeadmin bash << EOF
+        
         ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo hostname $COMPUTE_HOSTNAME_TO_ADD"
-EOF
-        sudo -i -u sgeadmin bash << EOF
         echo $PRIVATE_IP $COMPUTE_HOSTNAME_TO_ADD | ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo sh -c 'cat >>/etc/hosts'"
         echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME | ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo sh -c 'cat >>/etc/hosts'"
-EOF
         sed -i 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST="'"$COMPUTE_HOSTNAME_TO_ADD"'"/' $CONFIG_FILE
         scp $CONFIG_FILE $COMPUTE_HOSTNAME_TO_ADD:$CONFIG_FILE
         cd $SGE_ROOT && ./inst_sge -x -auto $CONFIG_FILE
         sleep 10
-        sudo -i -u sgeadmin bash << EOF
         ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sudo /tools/gridengine/uge/sge-master-default/common/sgeexecd start"
-EOF
     done
     
 echo "$(date) Changing all.q's tmpdir to /nvme/tmp"

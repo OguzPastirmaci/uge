@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+#set -x
 
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 
@@ -10,12 +10,12 @@ NEW_INSTANCE_POOL_SIZE=$((CURRENT_INSTANCE_POOL_SIZE + NUMBER_OF_INSTANCES_TO_AD
 
 if [ "$NEW_INSTANCE_POOL_SIZE" -gt "$CLUSTER_MAX_SIZE" ]
 then
-	echo "$(date) Cluster already has the maximum number of $CLUSTER_MAX_SIZE nodes"
+	echo "$(date) -- Cluster already has the maximum number of $CLUSTER_MAX_SIZE nodes"
 elif [ $(expr $(date +%s) - $(stat $SCALING_LOG -c %Y)) -le "$SCALING_COOLDOWN_IN_SECONDS" ]
 then
-	echo "$(date) Last scaling operation happened in the last $SCALING_COOLDOWN_IN_SECONDS seconds, skipping"
+	echo "$(date) -- Last scaling operation happened in the last $SCALING_COOLDOWN_IN_SECONDS seconds, skipping"
 else
-	echo "$(date) Starting to scale out the cluster from $CURRENT_INSTANCE_POOL_SIZE nodes to $NEW_INSTANCE_POOL_SIZE nodes"
+	echo "$(date) -- Starting to scale out the cluster from $CURRENT_INSTANCE_POOL_SIZE nodes to $NEW_INSTANCE_POOL_SIZE nodes"
     $OCI_CLI_LOCATION compute-management instance-pool update --instance-pool-id $INSTANCE_POOL_ID --size $NEW_INSTANCE_POOL_SIZE
     sleep 30
     INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[] | select(.state=="Provisioning") | .id')
@@ -44,5 +44,5 @@ else
         sleep 10
         ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd start"
     done
-    echo "$(date) Scaled out the cluster from $CURRENT_INSTANCE_POOL_SIZE nodes to $NEW_INSTANCE_POOL_SIZE nodes"
+    echo "$(date) -- Scaled out the cluster from $CURRENT_INSTANCE_POOL_SIZE nodes to $NEW_INSTANCE_POOL_SIZE nodes"
 fi

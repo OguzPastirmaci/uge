@@ -18,10 +18,11 @@ sed -i 's/^CELL_NAME=.*/CELL_NAME="'"$CELL_NAME"'"/' $CONFIG_FILE
 cd $SGE_ROOT
 echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 ./inst_sge -m -s -auto $CONFIG_FILE
-cp $SGE_ROOT/$CELL_NAME/common/settings.sh /etc/profile.d/SGE.sh
-cp $SGE_ROOT/$CELL_NAME/common/settings.csh /etc/profile.d/SGE.csh
-chmod +x /etc/profile.d/SGE.sh
-chmod +x /etc/profile.d/SGE.csh
+echo '$SGE_ROOT/$CELL_NAME/common/settings.sh' >>~/.bash_profile
+sudo cp $SGE_ROOT/$CELL_NAME/common/settings.sh /etc/profile.d/SGE.sh
+sudo cp $SGE_ROOT/$CELL_NAME/common/settings.csh /etc/profile.d/SGE.csh
+sudo chmod +x /etc/profile.d/SGE.sh
+sudo chmod +x /etc/profile.d/SGE.csh
 . /etc/profile.d/SGE.sh
 . /etc/profile.d/SGE.csh
 

@@ -2,7 +2,7 @@
 
 set -x
 
-. /home/sgeadmin/ocisge/scripts/cluster-info
+. /home/sgeadmin/ocisge/scripts/info.sh
 
 CURRENT_INSTANCE_POOL_SIZE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID --region $REGION | jq -r .data.size)
 NUMBER_OF_INSTANCES_TO_ADD=$1

@@ -32,7 +32,7 @@ until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool
     sleep 30
     done
 
-INSTANCE_IDS=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
+INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
 echo $INSTANCE_IDS
 
 for INSTANCE in $INSTANCES_TO_ADD; do

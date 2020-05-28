@@ -2,6 +2,8 @@
 
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 
+echo "Starting adding EXEC hosts"
+
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
 

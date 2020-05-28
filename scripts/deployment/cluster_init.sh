@@ -30,7 +30,7 @@ echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
     echo "$(date) Waiting for Instance Pool state to be RUNNING"
     sleep 30
-    done
+done
 
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
 echo $INSTANCES_TO_ADD

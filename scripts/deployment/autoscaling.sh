@@ -13,7 +13,7 @@ NUMBER_OF_USED_CORES=$(qstat -g c | grep all.q | awk '{print $3}')
 RUNNING_JOBS=$(qstat -u '*' | awk ' { if ($5 == "r") print $0 }' | wc -l)
 PENDING_JOBS=$(qstat -u '*' | awk ' { if ($5 == "qw" || $5 == "hqw")  print $0 }' | wc -l)
 
-CURRENT_UTILIZATION=$(echo "scale=2; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc -l)
+CURRENT_UTILIZATION=$(echo "scale=0; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc -l)
 DESIRED_UTILIZATION=10
 
 echo -e "\n$(date) -- Checking the cluster for autoscaling"

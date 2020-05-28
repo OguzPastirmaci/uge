@@ -19,18 +19,18 @@ DESIRED_UTILIZATION=50
 
 echo "scale=2; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc -l
 
-echo -e "\n$(date) Checking the cluster for autoscaling"
-echo "$(date) Number of running jobs in the cluster: $RUNNING_JOBS"
-echo "$(date) Number of pending jobs in the cluster: $PENDING_JOBS"
-echo "$(date) Number of total cores in the cluster: $NUMBER_OF_TOTAL_CORES"
-echo "$(date) Number of used cores in the cluster: $NUMBER_OF_USED_CORES"
+echo -e "\n$(date) -- Checking the cluster for autoscaling"
+echo "$(date) -- Number of running jobs in the cluster: $RUNNING_JOBS"
+echo "$(date) -- Number of pending jobs in the cluster: $PENDING_JOBS"
+echo "$(date) -- Number of total cores in the cluster: $NUMBER_OF_TOTAL_CORES"
+echo "$(date) -- Number of used cores in the cluster: $NUMBER_OF_USED_CORES"
 
 if [ "$CURRENT_UTILIZATION" -gt "$DESIRED_RATIO" ]
 then
-    echo "$(date) ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is more than the desired core utilization of $DESIRED_UTILIZATION%"
+    echo "$(date) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is more than the desired core utilization of $DESIRED_UTILIZATION%"
     /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/add-exec-host 1 >> /home/sgeadmin/ocisge/logs/autoscaling.log
 elif [ "$PENDING_JOBS" -eq 0 ] && [ "$RUNNING_JOBS" -eq 0 ]
 then
-    echo "$(date) REMOVING A NODE: There are no running jobs or pending jobs in the cluster"
+    echo "$(date) -- REMOVING A NODE: There are no running jobs or pending jobs in the cluster"
     /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/remove-exec-host >> /home/sgeadmin/ocisge/logs/autoscaling.log
 fi

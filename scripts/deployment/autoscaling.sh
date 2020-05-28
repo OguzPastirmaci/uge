@@ -24,7 +24,7 @@ echo "$(date) -- Current utilization of cores: $CURRENT_UTILIZATION%"
 
 if [ $UTILIZATION_RATIO = 1 ]
 then
-    echo "$(date) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is more than the desired core utilization of $DESIRED_UTILIZATION%"
+    echo "$(date) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is higher than the desired core utilization of $DESIRED_UTILIZATION%"
     /home/sgeadmin/ocisge/scripts/add_exec_host.sh 1 >> /home/sgeadmin/ocisge/logs/autoscaling.log
 elif [ "$PENDING_JOBS" -eq 0 ] && [ "$RUNNING_JOBS" -eq 0 ]
 then

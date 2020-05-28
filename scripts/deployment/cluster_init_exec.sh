@@ -7,11 +7,13 @@ MASTER_HOSTNAME=$(hostname)
 
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
     
-until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
-echo "$(date) Waiting for Instance Pool state to be RUNNING"
-sleep 15
-done
-    
+#until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
+#echo "$(date) Waiting for Instance Pool state to be RUNNING"
+#sleep 15
+#done
+ 
+sleep 30
+
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
 for INSTANCE in $INSTANCES_TO_ADD; do

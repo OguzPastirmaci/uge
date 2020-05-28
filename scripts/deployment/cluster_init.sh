@@ -53,7 +53,7 @@ INSTANCE_IDS=$($OCI_CLI_LOCATION compute-management instance-pool list-instances
     done
     
 echo "$(date) Changing all.q's tmpdir to /nvme/tmp"
-qconf -rattr queue tmpdir /nvme/tmp all.q
+#qconf -rattr queue tmpdir /nvme/tmp all.q
 qconf -Ap $SGE_ROOT/simcores_pe
 qconf -aattr queue pe_list simcores all.q
 echo "$(date) Cluster initialization completed"

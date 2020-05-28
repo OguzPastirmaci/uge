@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /home/sgeadmin/ocisge/scripts/info.sh
+. /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 
 echo "$(date) Starting cluster initialization"
 # Add ADMIN and SUBMIT host

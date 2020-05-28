@@ -26,10 +26,13 @@ echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 #. /etc/profile.d/SGE.csh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 
+INSTANCE_POOL_STATE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"')
+
 # Add EXEC hosts
-until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
+until [ $INSTANCE_POOL_STATE == "RUNNING" ]; do
     echo "$(date) Waiting for Instance Pool state to be RUNNING"
-    sleep 30
+    sleep 10
+    INSTANCE_POOL_STATE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"')
 done
 
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')

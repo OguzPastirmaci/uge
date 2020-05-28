@@ -58,7 +58,7 @@ for INSTANCE in $INSTANCES_TO_ADD; do
     ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sudo /tools/gridengine/uge/sge-master-default/common/sgeexecd start"
 done
     
-echo "$(date) Changing all.q's tmpdir to /nvme/tmp"
+#echo "$(date) Changing all.q's tmpdir to /nvme/tmp"
 #qconf -rattr queue tmpdir /nvme/tmp all.q
 qconf -Ap $SGE_ROOT/simcores_pe
 qconf -aattr queue pe_list simcores all.q

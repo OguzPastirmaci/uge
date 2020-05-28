@@ -42,7 +42,7 @@ echo $INSTANCES_TO_ADD
 qconf -Ap $SGE_ROOT/simcores_pe
 qconf -aattr queue pe_list simcores all.q
 
-/home/sgeadmin/ocisge/${cluster_postfix}/scripts/add_exec_host.sh 0
+/home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/add_exec_host.sh 0
 
 echo "$(date) Cluster initialization completed"
 

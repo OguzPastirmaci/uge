@@ -23,11 +23,11 @@ echo "$(date) Number of pending jobs in the cluster: $PENDING_JOBS"
 echo "$(date) Number of total cores in the cluster: $NUMBER_OF_TOTAL_CORES"
 echo "$(date) Number of used cores in the cluster: $NUMBER_OF_USED_CORES"
 
-if [ "$UTILIZATION" -ge "$DESIRED_RATIO" ]
+if [ "$CURRENT_UTILIZATION" -ge "$DESIRED_RATIO" ]
 then
     echo "SCALING: $NUMBER_OF_USED_CORES cores are being used out of $NUMBER_OF_TOTAL_CORES in the cluster, will try adding a new exec node"
     /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/add-exec-host 1
-elif [ "$UTILIZATION" -le "$DESIRED_RATIO" ]
+elif [ "$CURRENT_UTILIZATION" -le "$DESIRED_RATIO" ]
 then
     echo "SCALING: $NUMBER_OF_USED_CORES cores are being used out of $NUMBER_OF_TOTAL_CORES in the cluster, will try removing an exec node"
     /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/remove-exec-host

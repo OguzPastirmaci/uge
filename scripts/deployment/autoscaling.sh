@@ -17,8 +17,6 @@ PENDING_JOBS=$(qstat -u '*' | awk ' { if ($5 == "qw" || $5 == "hqw")  print $0 }
 CURRENT_UTILIZATION=$(echo "scale=2; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc -l)
 DESIRED_UTILIZATION=50
 
-echo "scale=2; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc -l
-
 echo -e "\n$(date) -- Checking the cluster for autoscaling"
 echo "$(date) -- Number of running jobs in the cluster: $RUNNING_JOBS"
 echo "$(date) -- Number of pending jobs in the cluster: $PENDING_JOBS"

@@ -31,5 +31,5 @@ then
    echo "$(date) -- REMOVING A NODE: There are no running jobs or pending jobs in the cluster"
    /home/sgeadmin/ocisge/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/logs/autoscaling.log
 else
-   echo "$(date )NOTHING TO DO: Current core utilization of $CURRENT_UTILIZATION% is within limits or there are running/pending in the cluster"
+   echo "$(date) -- NOTHING TO DO: Current core utilization of $CURRENT_UTILIZATION% is within limits or there are running/pending in the cluster"
 fi

@@ -33,7 +33,7 @@ until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool
     done
 
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
-echo $INSTANCE_IDS
+echo $INSTANCES_TO_ADD
 
 for INSTANCE in $INSTANCES_TO_ADD; do
     PRIVATE_IP=$($OCI_CLI_LOCATION compute instance list-vnics --instance-id $INSTANCE | jq -r '.data[]."private-ip"')

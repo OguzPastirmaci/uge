@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
+. $SGE_ROOT/$CELL_NAME/common/settings.sh
 
 echo "Starting adding EXEC hosts"
 

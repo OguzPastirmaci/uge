@@ -25,8 +25,6 @@ echo "$(date) Adding $MASTER_HOSTNAME as admin and submit host"
 #. /etc/profile.d/SGE.csh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 
-INSTANCE_POOL_STATE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"')
-
 # Add EXEC hosts
 #until [ $INSTANCE_POOL_STATE == "RUNNING" ]; do
 #    echo "$(date) Waiting for Instance Pool state to be RUNNING"
@@ -39,11 +37,13 @@ INSTANCE_POOL_STATE=$($OCI_CLI_LOCATION compute-management instance-pool get --i
 qconf -Ap $SGE_ROOT/simcores_pe
 qconf -aattr queue pe_list simcores all.q
 
+sleep 30
+
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[]."id"')
-    until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
-    echo "$(date) Waiting for Instance Pool state to be RUNNING"
-    sleep 15
-    done
+    #until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
+    #echo "$(date) Waiting for Instance Pool state to be RUNNING"
+    #sleep 15
+    #done
     MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
     MASTER_HOSTNAME=$(hostname)
     for INSTANCE in $INSTANCES_TO_ADD; do
@@ -63,7 +63,7 @@ INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-insta
         scp $CONFIG_FILE $COMPUTE_HOSTNAME_TO_ADD:$CONFIG_FILE
         cd $SGE_ROOT && ./inst_sge -x -auto $CONFIG_FILE
         sleep 10
-        ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd start"
+        ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sleep 5 && sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd start"
     done
 
 echo "$(date) Cluster initialization completed"

@@ -39,4 +39,5 @@ for INSTANCE in $INSTANCES_TO_ADD; do
     cd $SGE_ROOT && ./inst_sge -x -auto $CONFIG_FILE
     sleep 10
     ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sleep 5 && sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd start"
+    echo "Cluster init completed" >> $SCALING_LOG
 done

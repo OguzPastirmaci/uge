@@ -25,7 +25,7 @@ echo "$(date) -- Number of pending jobs in the cluster: $PENDING_JOBS"
 echo "$(date) -- Number of total cores in the cluster: $NUMBER_OF_TOTAL_CORES"
 echo "$(date) -- Number of used cores in the cluster: $NUMBER_OF_USED_CORES"
 
-if [ "$CURRENT_UTILIZATION" -gt "$DESIRED_RATIO" ]
+if [ "$CURRENT_UTILIZATION" -gt "$DESIRED_UTILIZATION" ]
 then
     echo "$(date) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is more than the desired core utilization of $DESIRED_UTILIZATION%"
     /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/add_exec_host.sh 1 >> /home/sgeadmin/ocisge/logs/autoscaling.log

@@ -13,15 +13,15 @@ variable "compartment_ocid" {}
 variable "ssh_public_key" {}
 
 variable "existing_subnet_id" {
-  default = "ocid1.subnet.oc1.phx.aaaaaaaa4wwwywyhm44yvufqc4kswizr4cdz4vsik5upykrk5x544f3xplwq"
+  default = "ocid1.subnet.oc1.iad.aaaaaaaarzx2l2zhfcnnmxxtqawqpyfggj4vnnxh2roxb6ml3swkvef6245a"
 }
 
 variable "sge_master_node_image_id" {
-  default = "ocid1.image.oc1.phx.aaaaaaaal6eih7io4zpx3nvypyhcgnv64nfeilkdinbz27lyt4co3hkdv5wa"
+  default = "ocid1.image.oc1.iad.aaaaaaaao5wye53xhp4vvan3nkpcltuvzj552ahqmtgkwuqcpyxc5jeifwta"
 }
 
 variable "sge_compute_node_instance_configuration_id" {
-  default = "ocid1.instanceconfiguration.oc1.phx.aaaaaaaabqtvbrhbnbd4qdxqpfofaqvjl5mlitjgesmjdsccg5mihje32d4q"
+  default = "ocid1.instanceconfiguration.oc1.iad.aaaaaaaai5yzak4d2ui4owengzkaemgmwcaachdlanyhkkk7uk5c2ws4cqbq"
 }
 
 variable "master_node_shape" {
@@ -29,12 +29,12 @@ variable "master_node_shape" {
 }
 
 variable "sge_root" {
-  default = "/nfs/sge"
+  default = "/tools/gridengine/uge"
 }
 
 # Settings for SGE cluster size
 variable "cluster_initial_size" {
-  default = 2
+  default = 1
 }
 
 variable "cluster_min_size" {
@@ -42,7 +42,7 @@ variable "cluster_min_size" {
 }
 
 variable "cluster_max_size" {
-  default = 3
+  default = 6
 }
 
 # Using local NVME for spooling
@@ -51,5 +51,5 @@ variable "execd_spool_dir_local" {
 }
 
 variable "sge_admin" {
-  default = "opc"
+  default = "sgeadmin"
 }

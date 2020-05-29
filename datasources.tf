@@ -1,6 +1,6 @@
 data "oci_identity_availability_domain" "ad" {
   compartment_id = var.tenancy_ocid
-  ad_number      = 1
+  ad_number      = 2
 }
 
 data "oci_core_instance_configuration" "sge_instance_configuration_datasource" {

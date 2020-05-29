@@ -20,9 +20,10 @@ resource "oci_core_instance" "sge_master" {
     source_id   = var.sge_master_node_image_id
   }
 
+
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(templatefile("scripts/sge-master.sh", {
+    user_data = base64encode(templatefile("scripts/configure.sh", {
       instance_pool_id           = oci_core_instance_pool.sge_instance_pool.id
       region                     = var.region
       compartment_id             = var.compartment_ocid

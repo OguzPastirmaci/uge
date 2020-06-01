@@ -11,7 +11,7 @@ MASTER_HOSTNAME=$(hostname)
 echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME | tee -a /etc/hosts
 
 cd /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts
-wget -O $CLUSTER_POSTFIX.conf https://raw.githubusercontent.com/OguzPastirmaci/misc/master/uge.conf
+wget https://raw.githubusercontent.com/OguzPastirmaci/misc/master/uge.conf
 cp $CLUSTER_POSTFIX.conf $CONFIG_FILE
 sed -i 's/^ADMIN_HOST_LIST=.*/ADMIN_HOST_LIST="'"$MASTER_HOSTNAME"'"/' $CONFIG_FILE
 sed -i 's/^SUBMIT_HOST_LIST=.*/SUBMIT_HOST_LIST="'"$MASTER_HOSTNAME"'"/' $CONFIG_FILE

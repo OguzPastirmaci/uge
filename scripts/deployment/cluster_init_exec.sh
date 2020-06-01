@@ -2,9 +2,9 @@
 
 set -x
 
-echo "Cluster postfix: $CLUSTER_POSTFIX"
+echo "Cluster postfix: <clusterpostfix>"
 
-. /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
+. /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 
 echo "Starting adding EXEC hosts"

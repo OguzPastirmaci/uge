@@ -2,6 +2,8 @@
 
 set -x
 
+echo "Cluster postfix: $CLUSTER_POSTFIX"
+
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 

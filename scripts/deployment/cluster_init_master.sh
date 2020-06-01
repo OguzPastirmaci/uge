@@ -2,7 +2,7 @@
 
 set -x
 
-echo $CLUSTER_POSTFIX
+echo "Cluster postfix: $CLUSTER_POSTFIX"
 
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 

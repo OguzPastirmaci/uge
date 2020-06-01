@@ -41,6 +41,13 @@ wget https://raw.githubusercontent.com/OguzPastirmaci/uge/master/scripts/deploym
 chmod +x *.sh
 chown -R sgeadmin /home/sgeadmin/ocisge/${cluster_postfix}
 
+sed -i "s/<clusterpostfix>/${cluster_postfix}/g" add_exec_host.sh
+sed -i "s/<clusterpostfix>/${cluster_postfix}/g" autoscaling.sh
+sed -i "s/<clusterpostfix>/${cluster_postfix}/g" cluster_init_master.sh
+sed -i "s/<clusterpostfix>/${cluster_postfix}/g" cluster_init_exec.sh
+sed -i "s/<clusterpostfix>/${cluster_postfix}/g" remove_exec_host.sh
+
+
 /bin/su -c ". /home/sgeadmin/ocisge/${cluster_postfix}/scripts/info.sh" - sgeadmin
 /bin/su -c "/home/sgeadmin/ocisge/${cluster_postfix}/scripts/cluster_init_master.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/cluster_init.log" - sgeadmin
 /bin/su -c "/home/sgeadmin/ocisge/${cluster_postfix}/scripts/cluster_init_exec.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/cluster_init.log" - sgeadmin

@@ -44,4 +44,5 @@ chown -R sgeadmin /home/sgeadmin/ocisge/${cluster_postfix}
 /bin/su -c ". /home/sgeadmin/ocisge/${cluster_postfix}/scripts/info.sh" - sgeadmin
 /bin/su -c "/home/sgeadmin/ocisge/${cluster_postfix}/scripts/cluster_init_master.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/cluster_init.log" - sgeadmin
 /bin/su -c "/home/sgeadmin/ocisge/${cluster_postfix}/scripts/cluster_init_exec.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/cluster_init.log" - sgeadmin
-/bin/su -c "(crontab -u 2>/dev/null; echo "* * * * * /home/sgeadmin/ocisge/${cluster_postfix}/scripts/autoscaling.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/autoscaling.log") | crontab -" - sgeadmin
+#/bin/su -c "(crontab -u 2>/dev/null; echo "* * * * * /home/sgeadmin/ocisge/${cluster_postfix}/scripts/autoscaling.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/autoscaling.log") | crontab -" - sgeadmin
+(crontab -u sgeadmin -l ; echo "* * * * * /home/sgeadmin/ocisge/${cluster_postfix}/scripts/autoscaling.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/autoscaling.log") | crontab -u sgeadmin -

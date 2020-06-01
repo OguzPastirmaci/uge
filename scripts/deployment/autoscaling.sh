@@ -4,7 +4,7 @@ pdate () {
     TZ=":US/Pacific" date
 }
 
-. /home/sgeadmin/ocisge/${cluster_postfix}/scripts/info.sh
+. /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 
 CURRENT_INSTANCE_POOL_SIZE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID --region $REGION --query 'data.size' --raw-output)
@@ -45,11 +45,11 @@ echo "$(pdate) -- Time elapsed since the last scaling operation: $TIME_ELAPSED_S
 if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_COOLDOWN = 1 ] && [ $ADDED_INSTANCE_POOL_SIZE -le $CLUSTER_MAX_SIZE ]
 then
     echo "$(pdate) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is higher than the target core utilization of $TARGET_UTILIZATION%"
-    /home/sgeadmin/ocisge/${cluster_postfix}/scripts/add_exec_host.sh 1 >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/autoscaling_detailed.log
+    /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/add_exec_host.sh 1 >> /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/logs/autoscaling_detailed.log
 elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
 then
    echo "$(pdate) -- REMOVING A NODE: There are no running jobs or pending jobs in the cluster"
-   /home/sgeadmin/ocisge/${cluster_postfix}/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/${cluster_postfix}/logs/autoscaling_detailed.log
+   /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/logs/autoscaling_detailed.log
 else
    echo "$(pdate) -- NOTHING TO DO: Scaling conditions did not happen"
 fi

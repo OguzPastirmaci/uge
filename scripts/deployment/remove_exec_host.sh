@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 
-. /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
+. /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 
 CURRENT_INSTANCE_POOL_SIZE=$($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID --region $REGION --query 'data.size' --raw-output)
 NEW_INSTANCE_POOL_SIZE=$((CURRENT_INSTANCE_POOL_SIZE - 1))

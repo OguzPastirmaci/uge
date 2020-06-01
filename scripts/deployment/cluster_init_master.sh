@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 . /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
 
 echo "$(date) Starting cluster initialization"

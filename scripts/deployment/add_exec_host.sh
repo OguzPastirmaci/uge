@@ -2,7 +2,7 @@
 
 #set -x
 
-. /home/sgeadmin/ocisge/$CLUSTER_POSTFIX/scripts/info.sh
+. /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 
 until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
 echo "$(date) Waiting for Instance Pool state to be RUNNING"

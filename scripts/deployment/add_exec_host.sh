@@ -43,6 +43,7 @@ for INSTANCE in $INSTANCES_TO_ADD; do
             sleep 10
         done
     ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo hostname $COMPUTE_HOSTNAME_TO_ADD"
+    ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD 'for i in {36..71} ; do echo 0 | sudo tee /sys/devices/system/cpu/cpu${i}/online; done'
     echo $PRIVATE_IP $COMPUTE_HOSTNAME_TO_ADD | ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo sh -c 'cat >>/etc/hosts'"
     echo $MASTER_PRIVATE_IP $MASTER_HOSTNAME sge-master | ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo sh -c 'cat >>/etc/hosts'"
     sed -i 's/^EXEC_HOST_LIST=.*/EXEC_HOST_LIST="'"$COMPUTE_HOSTNAME_TO_ADD"'"/' $CONFIG_FILE

@@ -31,7 +31,8 @@ export SGE_ROOT=${sge_root}
 export CONFIG_FILE=/home/sgeadmin/${cluster_postfix}.conf
 export SCALING_OUT_COOLDOWN_IN_SECONDS=300
 export SCALING_in_COOLDOWN_IN_SECONDS=600
-export SCALING_LOG=/home/sgeadmin/ocisge/${cluster_postfix}/logs/scaling_history.log
+export SCALING_OUT_LOG=/home/sgeadmin/ocisge/${cluster_postfix}/logs/scaling_out.log
+export SCALING_IN_LOG=/home/sgeadmin/ocisge/${cluster_postfix}/logs/scaling_in.log
 export COMPUTE_SHAPE=${sge_compute_instance_shape}
 export CELL_NAME=${cluster_postfix}
 EOF

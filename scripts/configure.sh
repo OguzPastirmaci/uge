@@ -6,6 +6,11 @@ mkdir -p /home/sgeadmin/ocisge/${cluster_postfix}/{scripts,logs}
 chown -R sgeadmin /home/sgeadmin/ocisge/${cluster_postfix}
 
 cat << 'EOF' > /home/sgeadmin/ocisge/${cluster_postfix}/scripts/info.sh
+
+pdate () {
+    TZ=":US/Pacific" date
+}
+
 # Use instance principals for OCI CLI authentication
 export OCI_CLI_LOCATION=/home/sgeadmin/bin/oci
 #export OCI_CLI_AUTH=instance_principal

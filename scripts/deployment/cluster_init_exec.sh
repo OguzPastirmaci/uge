@@ -34,4 +34,5 @@ for INSTANCE in $INSTANCES_TO_ADD; do
     sleep 10
     ssh sgeadmin@$COMPUTE_HOSTNAME_TO_ADD "sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd stop && sleep 5 && sudo $SGE_ROOT/$CELL_NAME/common/sgeexecd start"
     echo "$(pdate) Cluster init completed" >> $SCALING_OUT_LOG
+    echo "$(pdate) Cluster init completed" >> $SCALING_IN_LOG
 done

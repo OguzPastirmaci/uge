@@ -52,7 +52,7 @@ if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_OUT_COOLDOWN = 1 ] && [ $ADDED_INSTA
 then
     echo "$(pdate) -- SCALING OUT: Current core utilization of $CURRENT_UTILIZATION% is higher than the target core utilization of $TARGET_UTILIZATION%"
     /home/sgeadmin/ocisge/<clusterpostfix>/scripts/add_exec_host.sh 2 >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log
-elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_IN_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
+elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_IN_COOLDOWN = 1 ] && [ $SCALING_OUT_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
 then
    echo "$(pdate) -- SCALING IN: There are no running jobs or pending jobs in the cluster"
    /home/sgeadmin/ocisge/<clusterpostfix>/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log

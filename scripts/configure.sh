@@ -6,6 +6,7 @@ mkdir -p /home/sgeadmin/ocisge/${cluster_postfix}/{scripts,logs}
 chown -R sgeadmin /home/sgeadmin/ocisge/${cluster_postfix}
 
 cat << 'EOF' > /home/sgeadmin/ocisge/${cluster_postfix}/scripts/info.sh
+#!/bin/bash
 
 pdate () {
     TZ=":US/Pacific" date

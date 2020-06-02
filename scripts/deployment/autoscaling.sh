@@ -16,13 +16,21 @@ PENDING_JOBS=$(qstat -u '*' | awk ' { if ($5 == "qw" || $5 == "hqw")  print $0 }
 CURRENT_UTILIZATION=$(echo "scale=2; 100 / $NUMBER_OF_TOTAL_CORES * $NUMBER_OF_USED_CORES" | bc)
 TARGET_UTILIZATION=50
 UTILIZATION_RATIO=$(echo "$CURRENT_UTILIZATION > $TARGET_UTILIZATION" | bc -q )
-TIME_ELAPSED_SINCE_LAST_SCALING=$(echo $(expr $(date +%s) - $(stat $SCALING_LOG -c %Y)))
+TIME_ELAPSED_SINCE_LAST_SCALING_OUT=$(echo $(expr $(date +%s) - $(stat $SCALING_OUT_LOG -c %Y)))
+TIME_ELAPSED_SINCE_LAST_SCALING_IN=$(echo $(expr $(date +%s) - $(stat $SCALING_IN_LOG -c %Y)))
 
-if [ $TIME_ELAPSED_SINCE_LAST_SCALING -ge $SCALING_COOLDOWN_IN_SECONDS ]
+if [ $TIME_ELAPSED_SINCE_LAST_SCALING_OUT -ge $SCALING_OUT_COOLDOWN_IN_SECONDS ]
 then
-    SCALING_COOLDOWN=1
+    SCALING_OUT_COOLDOWN=1
 else
-    SCALING_COOLDOWN=0
+    SCALING_OUT_COOLDOWN=0
+fi
+
+if [ $TIME_ELAPSED_SINCE_LAST_SCALING_IN -ge $SCALING_IN_COOLDOWN_IN_SECONDS ]
+then
+    SCALING_IN_COOLDOWN=1
+else
+    SCALING_IN_COOLDOWN=0
 fi
 
 echo -e "\n$(pdate) -- Checking the cluster for autoscaling"
@@ -36,13 +44,14 @@ echo "$(pdate) -- Current number of EXEC nodes: $CURRENT_INSTANCE_POOL_SIZE"
 echo "$(pdate) -- Minimum number of EXEC nodes allowed: $CLUSTER_MIN_SIZE"
 echo "$(pdate) -- Maximum number of EXEC nodes allowed: $CLUSTER_MAX_SIZE"
 echo "$(pdate) -- Cooldown between scaling operations: $SCALING_COOLDOWN_IN_SECONDS seconds"
-echo "$(pdate) -- Time elapsed since the last scaling operation: $TIME_ELAPSED_SINCE_LAST_SCALING seconds"
+echo "$(pdate) -- Time elapsed since the last scaling out: $TIME_ELAPSED_SINCE_LAST_SCALING_OUT seconds"
+echo "$(pdate) -- Time elapsed since the last scaling in: $TIME_ELAPSED_SINCE_LAST_SCALING_IN seconds"
 
-if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_COOLDOWN = 1 ] && [ $ADDED_INSTANCE_POOL_SIZE -le $CLUSTER_MAX_SIZE ]
+if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_OUT_COOLDOWN = 1 ] && [ $ADDED_INSTANCE_POOL_SIZE -le $CLUSTER_MAX_SIZE ]
 then
     echo "$(pdate) -- SCALING OUT: Current core utilization of $CURRENT_UTILIZATION% is higher than the target core utilization of $TARGET_UTILIZATION%"
     /home/sgeadmin/ocisge/<clusterpostfix>/scripts/add_exec_host.sh 2 >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log
-elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
+elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_IN_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
 then
    echo "$(pdate) -- SCALING IN: There are no running jobs or pending jobs in the cluster"
    /home/sgeadmin/ocisge/<clusterpostfix>/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log

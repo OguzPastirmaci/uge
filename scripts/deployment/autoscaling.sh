@@ -43,9 +43,10 @@ echo "$(pdate) -- Target utilization of cores: $TARGET_UTILIZATION%"
 echo "$(pdate) -- Current number of EXEC nodes: $CURRENT_INSTANCE_POOL_SIZE"
 echo "$(pdate) -- Minimum number of EXEC nodes allowed: $CLUSTER_MIN_SIZE"
 echo "$(pdate) -- Maximum number of EXEC nodes allowed: $CLUSTER_MAX_SIZE"
-echo "$(pdate) -- Cooldown between scaling operations: $SCALING_COOLDOWN_IN_SECONDS seconds"
-echo "$(pdate) -- Time elapsed since the last scaling out: $TIME_ELAPSED_SINCE_LAST_SCALING_OUT seconds"
-echo "$(pdate) -- Time elapsed since the last scaling in: $TIME_ELAPSED_SINCE_LAST_SCALING_IN seconds"
+echo "$(pdate) -- Cooldown between scale out operations: $SCALING_OUT_COOLDOWN_IN_SECONDS seconds"
+echo "$(pdate) -- Cooldown between scale in operations: $SCALING_IN_COOLDOWN_IN_SECONDS seconds"
+echo "$(pdate) -- Time elapsed since the last scale out: $TIME_ELAPSED_SINCE_LAST_SCALING_OUT seconds"
+echo "$(pdate) -- Time elapsed since the last scale in: $TIME_ELAPSED_SINCE_LAST_SCALING_IN seconds"
 
 if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_OUT_COOLDOWN = 1 ] && [ $ADDED_INSTANCE_POOL_SIZE -le $CLUSTER_MAX_SIZE ]
 then

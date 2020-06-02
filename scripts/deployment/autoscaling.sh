@@ -44,11 +44,11 @@ echo "$(pdate) -- Time elapsed since the last scaling operation: $TIME_ELAPSED_S
 
 if [ $UTILIZATION_RATIO = 1 ] && [ $SCALING_COOLDOWN = 1 ] && [ $ADDED_INSTANCE_POOL_SIZE -le $CLUSTER_MAX_SIZE ]
 then
-    echo "$(pdate) -- ADDING A NODE: Current core utilization of $CURRENT_UTILIZATION% is higher than the target core utilization of $TARGET_UTILIZATION%"
+    echo "$(pdate) -- SCALING OUT: Current core utilization of $CURRENT_UTILIZATION% is higher than the target core utilization of $TARGET_UTILIZATION%"
     /home/sgeadmin/ocisge/<clusterpostfix>/scripts/add_exec_host.sh 2 >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log
 elif [ $PENDING_JOBS -eq 0 ] && [ $RUNNING_JOBS -eq 0 ] && [ $SCALING_COOLDOWN = 1 ] && [ $REMOVED_INSTANCE_POOL_SIZE -ge $CLUSTER_MIN_SIZE ]
 then
-   echo "$(pdate) -- REMOVING A NODE: There are no running jobs or pending jobs in the cluster"
+   echo "$(pdate) -- SCALING IN: There are no running jobs or pending jobs in the cluster"
    /home/sgeadmin/ocisge/<clusterpostfix>/scripts/remove_exec_host.sh >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/autoscaling_detailed.log
 else
    echo "$(pdate) -- NOTHING TO DO: Scaling conditions did not happen"

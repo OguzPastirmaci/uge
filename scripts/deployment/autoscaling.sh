@@ -1,9 +1,5 @@
 #!/bin/bash
 
-pdate () {
-    TZ=":US/Pacific" date
-}
-
 . /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 

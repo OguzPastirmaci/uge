@@ -20,8 +20,9 @@ sudo sed -i".bak" "/$COMPUTE_HOSTNAME_TO_REMOVE/d" /etc/hosts
 
 MAX_CPU=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(CPUUtilization[1m]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.max())' | jq -r '.data[]."aggregated-datapoints"[].value' | sort -r | head -n1 | xargs printf "%.2f")
 MAX_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1m]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.max())' | jq -r '.data[]."aggregated-datapoints"[].value' | sort -r | head -n1 | xargs printf "%.2f")
-AVG_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1m]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
+
 AVG_CPU=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(CPUUtilization[1m]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
+AVG_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1m]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
 
 $OCI_CLI_LOCATION compute instance terminate --region $REGION --instance-id $INSTANCE_TO_DELETE --force
 $OCI_CLI_LOCATION compute-management instance-pool update --instance-pool-id $INSTANCE_POOL_ID --size $NEW_INSTANCE_POOL_SIZE

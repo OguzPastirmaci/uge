@@ -19,11 +19,8 @@ cd $SGE_ROOT && ./inst_sge -ux -auto $CONFIG_FILE
 sudo sed -i".bak" "/$COMPUTE_HOSTNAME_TO_REMOVE/d" /etc/hosts
 
 MAX_CPU=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(CPUUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.max())' | jq -r '.data[]."aggregated-datapoints"[].value' | sort -r | head -n1 | xargs printf "%.2f")
-
 MAX_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.max())' | jq -r '.data[]."aggregated-datapoints"[].value' | sort -r | head -n1 | xargs printf "%.2f")
-
 AVG_CPU=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(CPUUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
-
 AVG_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
 
 echo "Maximum CPU usage of $COMPUTE_HOSTNAME_TO_REMOVE was $MAX_CPU" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log

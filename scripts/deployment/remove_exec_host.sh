@@ -23,10 +23,10 @@ MAX_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_c
 AVG_CPU=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(CPUUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
 AVG_MEMORY=$(oci monitoring metric-data summarize-metrics-data --namespace oci_computeagent --compartment-id $COMPARTMENT_ID --query-text='(MemoryUtilization[1d]{resourceId = "'"$INSTANCE_TO_DELETE"'"}.mean())' | jq -r '.data[]."aggregated-datapoints"[].value' | awk '{ total += $0; count++ } END { print total/count }' | xargs printf "%.2f")
 
-echo "Maximum CPU usage of $COMPUTE_HOSTNAME_TO_REMOVE was $MAX_CPU" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
-echo "Maximum RAM usage of $COMPUTE_HOSTNAME_TO_REMOVE was $MAX_MEMORY" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
-echo "Average CPU usage of $COMPUTE_HOSTNAME_TO_REMOVE was $AVG_CPU" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
-echo "Average RAM usage of $COMPUTE_HOSTNAME_TO_REMOVE was $AVG_MEMORY" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
+echo "Maximum CPU usage of $COMPUTE_HOSTNAME_TO_REMOVE was $MAX_CPU %" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
+echo "Maximum RAM usage of $COMPUTE_HOSTNAME_TO_REMOVE was $MAX_MEMORY %" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
+echo "Average CPU usage of $COMPUTE_HOSTNAME_TO_REMOVE was $AVG_CPU %" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
+echo "Average RAM usage of $COMPUTE_HOSTNAME_TO_REMOVE was $AVG_MEMORY %" >> /home/sgeadmin/ocisge/<clusterpostfix>/logs/$COMPUTE_HOSTNAME_TO_REMOVE.log
 
 $OCI_CLI_LOCATION compute instance terminate --region $REGION --instance-id $INSTANCE_TO_DELETE --force
 $OCI_CLI_LOCATION compute-management instance-pool update --instance-pool-id $INSTANCE_POOL_ID --size $NEW_INSTANCE_POOL_SIZE

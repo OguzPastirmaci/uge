@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -ex
 
 mkdir -p /home/sgeadmin/ocisge/${cluster_postfix}/{scripts,logs}
 chown -R sgeadmin /home/sgeadmin/ocisge/${cluster_postfix}

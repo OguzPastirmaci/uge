@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 . /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 . $SGE_ROOT/$CELL_NAME/common/settings.sh
 

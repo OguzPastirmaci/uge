@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -x
+set -ex
 
 . /home/sgeadmin/ocisge/<clusterpostfix>/scripts/info.sh
 

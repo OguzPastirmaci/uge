@@ -29,8 +29,10 @@ until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool
 echo "$(pdate) Waiting for Instance Pool state to be RUNNING"
 sleep 15
 done
+
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
+
 for INSTANCE in $INSTANCES_TO_ADD; do
     PRIVATE_IP=$($OCI_CLI_LOCATION compute instance list-vnics --instance-id $INSTANCE --compartment-id $COMPARTMENT_ID | jq -r '.data[]."private-ip"')
     COMPUTE_HOSTNAME_TO_ADD=$($OCI_CLI_LOCATION compute instance get --instance-id $INSTANCE | jq -r '.data."display-name"')

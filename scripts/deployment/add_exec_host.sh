@@ -10,21 +10,25 @@ NEW_INSTANCE_POOL_SIZE=$((CURRENT_INSTANCE_POOL_SIZE + NUMBER_OF_INSTANCES_TO_AD
 
 echo "$(pdate) -- Starting to scale out the cluster from $CURRENT_INSTANCE_POOL_SIZE nodes to $NEW_INSTANCE_POOL_SIZE nodes" >> $SCALING_OUT_LOG
 
+# Wait until instance pool's state is RUNNING
 until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
 echo "$(pdate) Waiting for Instance Pool state to be RUNNING"
 sleep 15
 done
 
+# Scale out - Add X number of nodes to the instance pool
 $OCI_CLI_LOCATION compute-management instance-pool update --instance-pool-id $INSTANCE_POOL_ID --size $NEW_INSTANCE_POOL_SIZE
-#INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[] | select(.state=="Provisioning") | .id')
 
+# Wait for the new instances to be part of the instance pool
 until [ $($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[] | select(.state=="Provisioning") | .id' | wc -l) -eq $NUMBER_OF_INSTANCES_TO_ADD ]; do
     echo "$(pdate) Waiting for new instances to appear"
     sleep 5
 done
 
+# Get the updates list of instances in the instance pool
 INSTANCES_TO_ADD=$($OCI_CLI_LOCATION compute-management instance-pool list-instances --instance-pool-id $INSTANCE_POOL_ID --region $REGION --compartment-id $COMPARTMENT_ID | jq -r '.data[] | select(.state=="Provisioning") | .id')
 
+# Wait until instance pool's state is RUNNING
 until [ $($OCI_CLI_LOCATION compute-management instance-pool get --instance-pool-id $INSTANCE_POOL_ID | jq -r '.data."lifecycle-state"') == "RUNNING" ]; do
 echo "$(pdate) Waiting for Instance Pool state to be RUNNING"
 sleep 15
@@ -32,6 +36,8 @@ done
 
 MASTER_PRIVATE_IP=$(curl -s http://169.254.169.254/opc/v1/vnics/ | jq -r '.[].privateIp')
 MASTER_HOSTNAME=$(hostname)
+
+# Add the new instances in the instance pool to the cluster
 
 for INSTANCE in $INSTANCES_TO_ADD; do
     PRIVATE_IP=$($OCI_CLI_LOCATION compute instance list-vnics --instance-id $INSTANCE --compartment-id $COMPARTMENT_ID | jq -r '.data[]."private-ip"')
